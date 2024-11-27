@@ -12,17 +12,8 @@ import AppFooter from './components/Footer';
 import Chatbot from './components/Chatbot';
 import Post from './components/Post';
 import SignUp from './components/SignUp';
-import Provider from './context/Provider';
 
 function App() {
-
-  function context(){
-    return(
-      <Provider>
-        <SignUp/>
-      </Provider>
-    );
-  }
 
   return (
     <div className="App">
@@ -36,7 +27,7 @@ function App() {
         <Route path='/map' element={<Map/>}/>
         <Route path='/chatbot' element={<Chatbot/>}/>
         <Route path='/post' element={<Post/>}/>
-        <Route path='/signUp' element={context()}/>
+        <Route path='/signUp' element={<SignUp/>}/>
         <Route path='*' element={<Navigate to='/'/>}/>
       </Routes>
       <AppFooter/>

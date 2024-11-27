@@ -7,12 +7,13 @@ function SignUp() {
   const {dispatch} = useMyContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
   const navigate = useNavigate();
 
   const submit = (e) => {
     e.preventDefault();
-    signUp(dispatch, email, password);
+    signUp(dispatch, email, password,name);
     navigate('/');
   };
   
@@ -22,6 +23,17 @@ function SignUp() {
       <div className="login-container">
         <div className="login-box">
             <h2 className="login-title">Sign-Up</h2>
+              <label className="login-label" htmlFor="username">Name</label>
+              <input
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)}
+                  className="login-input"
+                  type="text"
+                  id="name"
+                  placeholder="Enter Name"
+                  required
+              />
+              
               <label className="login-label" htmlFor="username">Email</label>
               <input
                   value={email} 

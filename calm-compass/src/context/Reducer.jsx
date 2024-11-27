@@ -1,5 +1,7 @@
 import{
-    SIGN_UP
+    ADD_POST,
+    SIGN_UP,
+    GET_POSTS
 } from './actions';
 
 function Reducer(state,action){
@@ -7,7 +9,16 @@ function Reducer(state,action){
         case SIGN_UP:
             return{
                 ...state,
-                login: true
+            };
+        case ADD_POST:
+            return{
+                ...state,    
+                posts:[...state.posts,action.payload]          
+            };
+        case GET_POSTS:
+            return{
+                ...state,
+                posts:action.payload
             };
         default:
             throw new Error(`Unsopported action ${action.type}`)

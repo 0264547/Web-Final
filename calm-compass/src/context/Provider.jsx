@@ -1,13 +1,14 @@
 import React, {createContext, useContext, useReducer} from 'react';
 import Reducer from './Reducer.jsx';
-import { SIGN_UP } from './actions';
+import { ADD_POST, SIGN_UP } from './actions';
 import api from '../utils/api';
 
 const Context = createContext();
 
 function Provider({children}){
     const initialState = {
-        login:false
+        login:false,
+        posts: []
     }
     const [state,dispatch] = useReducer(Reducer,initialState);
     return(
@@ -21,9 +22,9 @@ function useMyContext(){
     return useContext(Context);
 }
 
-async function signUp(dispatch,email,password){
+async function signUp(dispatch,email,password,name){
     try{
-        await api.post("/signUp",{email,password});
+        await api.post("/signUp",{email,password,name});
 
             dispatch({
                 type: SIGN_UP,
@@ -35,5 +36,19 @@ async function signUp(dispatch,email,password){
     }
 }
 
+async function addPost(dispatch,title,description,upvotes,downvotes){
+    try{
+        const res = await api.post("/addPost",{title,description,upvotes,downvotes});
+        console.log(res)
+            dispatch({
+                type: ADD_POST,
+                payload: res.data
+            });
+                        
+    } catch(err){
+        console.log("Error")
+    }
+}
+
 export default Provider;
-export {useMyContext,signUp};
+export {useMyContext,signUp,addPost};

@@ -1,20 +1,55 @@
-import React from 'react';
+import React,{ useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import { useMyContext, addPost } from '../context/Provider';
+import { useNavigate } from 'react-router-dom';
 
 function Post(){
+    const {dispatch} = useMyContext();
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+
+    const navigate = useNavigate();
+    const submit = (e) => {
+        console.log(dispatch);
+        e.preventDefault();
+        addPost(dispatch, title, description,0,0);
+        navigate('/community');
+    };
+
     return(
-        <form action="/add_forum" method="post">   
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Forum title</label>
-                <input type="text" name="title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Title" required/>
-            </div>
+    <form onSubmit={submit} id='singin'>
+        <div className="login-container">
+            <div className="login-box">
+                <h2 className="login-title">Create Post</h2>
+                <label className="login-label" htmlFor="username">Title</label>
+                <input
+                    value={title} 
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="login-input"
+                    type="text"
+                    id="title"
+                    placeholder="Enter Title"
+                    required
+                />
 
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Forum description</label>
-                <input type="text" name="description" class="form-control" id="exampleInputPassword1" placeholder="Description" required/>
-            </div>
+                <label className="login-label" htmlFor="password">Description</label>
+                <input
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="login-input"
+                    type="text"
+                    id="Description"
+                    placeholder="Enter Description"
+                    required
+                />
 
-            <button type="submit" class="btn">Add forum</button>
-        </form>
+                <div className="login-buttons">
+                    <Button type="button" className="cancel-button" onClick={() => navigate('/community')}>Cancel</Button>
+                    <Button type="submit" className="login-button">Add Post</Button>
+                </div>
+            </div>
+        </div>
+    </form>
    );
 }
 
