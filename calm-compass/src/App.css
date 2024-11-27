@@ -323,6 +323,15 @@ ul li::before {
 
 }
 
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
 .btn {
   background-color: #B692C2;  
   color: white;               
@@ -441,4 +450,104 @@ ul li::before {
 .forum form {
   display: inline-block;
   margin-right: 20px;
+}
+
+:root {
+  --pastel-blue: #a3d8f4;
+  --pastel-pink: #e291b6;
+  --pastel-green: #94e0c6;
+  --pastel-yellow: #f4e3a3;
+  --text-color: #333;
+  --input-bg: #fff;
+}
+
+#singin{
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.login-box {
+  background-color: var(--pastel-pink);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  text-align: center;
+}
+
+.login-title {
+  color: var(--text-color);
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-label {
+  color: var(--text-color);
+  text-align: left;
+}
+
+.login-input {
+  background-color: var(--input-bg);
+  border: 1px solid var(--pastel-yellow);
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.login-input::placeholder {
+  color: #999;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.login-button, .cancel-button {
+  background-color: var(--pastel-green);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: var(--pastel-yellow);
+}
+
+.cancel-button:hover {
+  background-color: var(--pastel-blue);
+}
+
+.no-account {
+  margin-top: 20px;
+  color: var(--text-color);
+}
+
+.signup-link {
+  color: var(--pastel-green);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
 }

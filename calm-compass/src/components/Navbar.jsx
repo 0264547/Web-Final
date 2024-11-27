@@ -18,6 +18,7 @@ function AppNavbar() {
             <Nav.Link href="/advice">Professional Advice</Nav.Link>
             <Nav.Link href="/community">Community</Nav.Link>
             <Nav.Link href="/map">Map</Nav.Link>
+            <Nav.Link href="/signUp">Sign-Up</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
