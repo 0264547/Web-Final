@@ -1,21 +1,44 @@
-import React from 'react';
+import React,{useState} from 'react';
+import { useMyContext,chatBot } from '../context/Provider';
 
 function Chatbot() {
-  return (
-    <div class="chat_bot_container">  
-        <div class="chat_bot_content_box">
-            <div id="chat_bot_scrolleables_container">                                   
-                <div id="chat_bot_user_bubble"><p>Bubbl1</p></div>
-                <div id="chat_bot_bubble"><p>Bubbl2</p></div>
-            </div>
+    const {state,dispatch} = useMyContext();
+    const [message, setMessage] = useState("");
 
+    const submit = (e) => {
+        e.preventDefault();
+        chatBot(dispatch,message);
+    };
+
+  return (
+    <div className="chat_bot_container">  
+        <div className="chat_bot_container">
+            <div className="chat_bot_content_box">
+                <div id="chat_bot_scrolleables_container">
+                    {state.userMessages.map((userMsg, index) => (
+                        <div key={`user-${index}`} className="chat_bubble_container">
+                            <div className="chat_bot_user_bubble">
+                                <p>{userMsg}</p>
+                            </div>
+                        </div>
+                    ))}
+                    {state.chatBotMessages.map((chatBotMsg, index) => (
+                        <div key={`chatbot-${index}`} className="chat_bubble_container">
+                            <div className="chat_bot_bubble">
+                                <p>{chatBotMsg}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
-        <div class="chat_bot_footer">
+        <div className="chat_bot_footer">
             
-            <div class="chat_bot_input_container">
+            <div className="chat_bot_input_container">
     
-                <form action="/chat" method="post">
-                    <input type="text" id="chat_bot_input_box_text" name="message" placeholder="Message" autofocus/>
+                <form onSubmit={submit}>
+                    <input type="text" id="chat_bot_input_box_text" name="message" placeholder="Message" autoFocus value={message} 
+                    onChange={(e) => setMessage(e.target.value)}/>
                     <button type="submit"  id="chat_bot_input_box_button">Send</button>
                 </form>
             </div>

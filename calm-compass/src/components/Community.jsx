@@ -3,38 +3,30 @@ import Button from 'react-bootstrap/esm/Button';
 import { useNavigate } from 'react-router-dom';
 import { useMyContext } from '../context/Provider';
 import Forum from './Forum';
-import api from '../utils/api';
+import { getPosts } from '../context/Provider';
 
 function Community(){
     const {state,dispatch} = useMyContext();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getPosts = async () => {
-            const res = await api.get('/posts');
-            dispatch({
-                type: 'GETPOSTS',
-                payload: res.data
-            }); 
-        };
-
-        getPosts();
+        getPosts(dispatch);
     }, [dispatch]);
 
-    const posts = state.posts.map((post)=>{
-        return(
+    const posts = state.posts?.length ? (
+        state.posts.map((post) => (
             <Forum
                 title={post.title}
                 description={post.description}
-                upvotes={post.upvotes}
-                downvotes={post.downvotes}
             />
-        );
-    });
+        ))
+    ) : (
+        <h2>No posts to display</h2>
+    );
 
     return(
         <div className="content-box">
-            <Button onClick={() => navigate('/post')} name="button_forum" className="btn">Add forum</Button>
+            <Button onClick={() => navigate('/post')} name="button_forum" className="btn">Add Post</Button>
             {posts}
     </div> 
     );

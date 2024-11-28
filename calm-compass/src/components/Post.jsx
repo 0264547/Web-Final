@@ -10,9 +10,8 @@ function Post(){
 
     const navigate = useNavigate();
     const submit = (e) => {
-        console.log(dispatch);
         e.preventDefault();
-        addPost(dispatch, title, description,0,0);
+        addPost(dispatch, title, description);
         navigate('/community');
     };
 

@@ -1,23 +1,38 @@
+require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const cors = require('cors');
 
 const app = express();
 
+const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5-flash',
+    generationConfig: {
+        responseMimeType: 'text/plain',
+        maxOutputTokens: 1000,
+        temperature: 0.05,
+    },
+});
+
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+var pages;
+var pageName;
+var userMessages = [];
+var chatBotMessages = [];
 
-const mongoURL = 'mongodb+srv://0264547:PtRTk33hxe3KNT@cluster0.rld85.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const uri =`mongodb+srv://0264547:PtRTk33hxe3KNT@cluster0.rld85.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 mongoose
-    .connect(mongoURL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .catch((err) => console.error('Failed to connect to MongoDB', err));
+  .connect(uri)
+  .then(() => console.log("Connected to MongoDB!"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 
 const UserSchema = new mongoose.Schema({
-    name: String,
     email: String,
     password: String
 });
@@ -25,12 +40,9 @@ const UserSchema = new mongoose.Schema({
 const PostSchema = new mongoose.Schema({
     title: String,
     description: String,
-    upvotes: Number,
-    downvotes: Number
 });
 
 app.get('/',(req,res) => {
-    res.send("Server is up");
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -39,15 +51,13 @@ const Post = mongoose.model('Post', PostSchema);
 app.post('/signUp', async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
-    var name = req.body.name;
-    var user = await User.findOne({email});
+    var user = await User.findOne({email:{$eq: email}}).exec();
     
     if(user){
         return res.status(400).json({message:"Email already corresponds to an account"});
     }
     
     const newUser = new User({
-        name:name,
         email:email,
         password:password
     })
@@ -56,20 +66,60 @@ app.post('/signUp', async (req, res) => {
     res.json(savedUser);
 });
 
+app.post('/signIn', async (req, res) => {
+    var email = req.body.email;
+    var password = req.body.password;   
+    var user = await User.findOne({email:{$eq: email},password:{$eq: password}}).exec();
+    console.log(req.body);
+    if (user) {
+        res.json(user);
+    } else {
+        res.status(401).json({ name: 'Invalid email or password' });
+    }
+});
+
 app.post('/addPost', async (req, res) => {
     var title = req.body.title;
     var description = req.body.description;
-    var upvotes = req.body.upvotes;
-    var downvotes = req.body.downvotes;
-
     const newPost = new Post({
         title: title,
         description: description,
-        upvotes:upvotes,
-        downvotes:downvotes
     })
     const savedPost = await newPost.save();
     res.json(savedPost);
+});
+
+app.post('/chatBot', async (req, res) => {
+    const userMessage = req.body.message;
+    let chatHistory =
+    'Eres Amadeus, un ayudante de los usuarios con su salud mental, te encanta ayudar a las personas con temas personales o de situacion que los ponga en tristeza, usas ayudas psicologicas para ayudarlas e intentar hacerlas felices, mi inventor es Elshadowzr, un cientifico loco que le gusta el choripan';
+    if (userMessage.replaceAll(' ', '')) {
+        userMessages.push(userMessage);
+
+        chatHistory += `Usuario: ${userMessage}\n`;
+
+        const result = await model.generateContent(chatHistory);
+        const response = result.response.text();
+
+        chatBotMessages.push(`AMADEUS: ${response}\n`);
+        chatHistory += `AMADEUS: ${response}\n`;
+
+        res.json('chatbot', {
+            pages,
+            pageName,
+            chatBotMessages,
+            userMessages,
+            error: false,
+        });
+    } else {
+        res.json('chatbot', {
+            pages,
+            pageName,
+            chatBotMessages,
+            userMessages,
+            error: true,
+        });
+    }
 });
 
 app.get('/posts', async (req, res) => {
@@ -78,5 +128,5 @@ app.get('/posts', async (req, res) => {
 });
 
 app.listen(3000, ()=>{
-    console.log("Application Listening on Port 3000");
+    console.log("Port 3000");
 });
